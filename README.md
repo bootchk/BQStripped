@@ -6,6 +6,8 @@ See the BQ25504 data sheet and solar example circuits.
 
 Also shared at OSHPark (the tested Gerbers, i.e. the PDB fabrication files.)
 
+(Also, I have another design which uses a load switch and programs VBAT_OK as control to the loadswitch so that output voltage switches on hard at say 1.9V and limits output voltage to 3.6V (the specs for a Nordic NRF52 radio chip.)  The board is slightly larger.  It uses the same sort of tricks to share resistor nets (which granted, are not that large in area.)  I would be glad to share that design also, but I haven't tested it yet.)
+
 ###Use Case
 
 The BQ25504 (and thus the board) boosts voltage from small, low-voltage solar cells (panels) and also provides MPPT to optimize power extraction from the solar cell.
@@ -44,3 +46,18 @@ Since the battery management functions are not used, you should not use a chemic
 ###BOM
 
 You can generate one from the KiCad files.  See the BQ25504 data sheet for other suggestions.  Lands for the discretes are for 603 packages.  Lands for inductor L1 are for a part made by Wurth.
+
+###Images
+
+In the repository are:
+
+  - PDF of schematic
+  - PNG image of the front of the PCB (but its not pretty enough to help much in placing parts.)
+
+###About the design
+
+Certain pins of the BQ chip 'sample' resistor nets to program the chip's voltage regulation functions.  The reference designs from TI use separate resistor nets for each 'program'.  But you can share one resistor net among 'programs.'  That saves board space, but might limit the results of the programs (given the constraint that each resistor net must add up to say 10 meg ohm.)  Here, I eliminate the resistor nets altogether and connect the programming pins directory to reference voltages for the programming nets (VRDIV and ground.)  In the schematic, see the network labelel "High Prog", and the fact that the VBAT_OV pin is grounded.
+
+For more information about these tricks, on the net is a presentation by the chip designer, where you can find a schematic for chip internals with respect to these programming pins.  Also, there is some discussion in the TI forums.
+
+Note this design still has a resistor net for MPPT programming.  In my opinion, thats a waste also, since very few users will program MPPT to other than a rough value of 80% (of the solar cell's Voc.)
